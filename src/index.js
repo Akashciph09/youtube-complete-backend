@@ -7,7 +7,7 @@ import { app } from "./app.js";
 const PORT = process.env.PORT;
 
 dotenv.config({
-  path: "./env", //It tells dotenv where to find your environment file.
+  path: "./.env", //It tells dotenv where to find your environment file.
 });
 
 connectDB()
