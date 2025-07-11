@@ -1,3 +1,3 @@
-# chai aur backend 
- This is a video series on backend with javascript 
+
+ This is a complete backend code containing all the features that a youtube has.
  
