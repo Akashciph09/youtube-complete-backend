@@ -13,12 +13,20 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
       throw new ApiError(401, "Unathorized request");
     }
 
+    /*jwt.verify() is the function from the jsonwebtoken library that both:
+
+Validates the JWT’s signature using the secret or public key you give it.
+
+This ensures the token wasn’t modified after being created.
+
+Decodes the payload if the signature is valid (and the token hasn’t expired).
+*/
+
     const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     const user = await User.findById(decodedToken?._id).select(
       "-password -refreshToken"
     );
     if (!user) {
-      //discuss about frontend
       throw new ApiError(401, "Invalid Access Token");
     }
     //req.user = user is  basically attaching the logged-in user’s data to the req object, so that other middleware or route handlers down the chain can access it without having to fetch it from the database again.
