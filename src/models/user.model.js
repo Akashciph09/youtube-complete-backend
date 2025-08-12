@@ -62,6 +62,7 @@ userSchema.pre("save", async function (next) {
 });
 
 //this.password → is the hashed password in the DB
+//methods are use only for custom methods
 userSchema.methods.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
@@ -86,9 +87,6 @@ userSchema.methods.generatedRefreshToken = function () {
   return jwt.sign(
     {
       _id: this._id,
-      email: this.email,
-      username: this.username,
-      fullName: this.fullName,
     },
     process.env.REFRESH_TOKEN_SECRET,
     {
@@ -98,3 +96,25 @@ userSchema.methods.generatedRefreshToken = function () {
 };
 
 export const User = mongoose.model("User", userSchema);
+
+//this User model gives you access to predefined methods like .find(),.create(),.findOne()
+
+// So your flow looks like this:
+// import mongoose from "mongoose";
+
+// const userSchema = new mongoose.Schema({
+//   name: String,
+//   email: String,
+//   password: String,
+// });
+
+// // Create the model:
+// const User = mongoose.model("User", userSchema);
+
+// // Now you can use it like this:
+// const users = await User.find(); // Find all users
+// const user = await User.findOne({ email: "akash@example.com" }); // Find one
+// const newUser = new User({ name: "Akash", email: "...", password: "..." }); // New doc
+// await newUser.save(); // Save to DB
+
+

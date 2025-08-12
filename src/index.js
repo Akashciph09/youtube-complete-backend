@@ -20,6 +20,10 @@ connectDB()
   .catch((err) => {
     console.log("MONGO db connection faileddd !!!", err);
   });
+
+
+//one method of set up of database connection
+//we are creating a iife here 
 /*
 import express from "express";
 const app = express();
