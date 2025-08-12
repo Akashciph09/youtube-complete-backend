@@ -7,8 +7,8 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 const generateAccessAndRefreshToken = async (userId) => {
   try {
     const user = await User.findById(userId);
-    const accessToken = User.generatedAccessToken();
-    const refreshToken = User.generatedRefreshToken();
+    const accessToken = user.generatedAccessToken();
+    const refreshToken = user.generatedRefreshToken();
 
     user.refreshToken = refreshToken;
     //“Don’t waste time validating the whole document — I trust this user is already valid, just update the refreshToken.”
@@ -109,7 +109,7 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, "username or email is required");
   }
 
-  const user = User.findOne({
+  const user = await User.findOne({
     $or: [{ username }, { email }],
   });
 
@@ -123,11 +123,17 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new ApiError(401, "Invalid user credentials");
   }
 
-  const { refreshToken, accessToken } = await generatedRefreshToken(user._id);
+  const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
+    user._id
+  );
 
   const loggedInUser = await User.findById(user._id).select(
     "-password -refreshToken"
   );
+  const options = {
+    httpOnly: true,
+    secure: true,
+  };
 
   //the .cookie() method is Express's way of telling the browser to store a cookie.
   return res
