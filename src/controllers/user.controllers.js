@@ -111,6 +111,7 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 
   const user = await User.findOne({
+    //logical query operator 
     $or: [{ username }, { email }],
   });
 
@@ -219,4 +220,4 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
   }
 });
 
-export { registerUser, loginUser, logoutUser ,refreshAccessToken };
+export { registerUser, loginUser, logoutUser, refreshAccessToken };
